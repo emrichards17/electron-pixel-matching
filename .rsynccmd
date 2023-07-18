@@ -1,0 +1,1 @@
+rsync -asP --exclude-from .rsyncexclude ../electron-pixel-matching sobhatta@naf-cms.desy.de:/nfs/dust/cms/user/sobhatta/work/
