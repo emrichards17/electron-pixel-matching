@@ -20,17 +20,19 @@ def main() :
             "hgcalEle_count",
             "v_hgcalEle_pt",
             
+            "v_hgcalEle_matchedGenEle_idx",
+            
             "v_hgcalEle_SC_clus_count",
             "vv_hgcalEle_SC_clus_energy",
             
             "v_hgcalEle_SC_hit_count",
             "vv_hgcalEle_SC_hit_energy",
         ],
-        cut = "hgcalEle_count > 0",
+        cut = "(hgcalEle_count > 0) & (count_nonzero(v_hgcalEle_matchedGenEle_idx > 0, axis = -1) > 0)",
         language = utils.uproot_lang,
         num_workers = 10,
-        entry_start = 0,
-        entry_stop = 10
+        #entry_start = 0,
+        #entry_stop = 10
     ) :
         
         #print(tree_branches["hgcalEle_count"])

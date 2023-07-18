@@ -1,4 +1,5 @@
 import argparse
+import awkward
 import ctypes
 import gc
 import glob
@@ -61,6 +62,7 @@ uproot_lang.functions["min"] = numpy.minimum
 uproot_lang.functions["max"] = numpy.maximum
 uproot_lang.functions["where"] = numpy.where
 uproot_lang.functions["nonzero"] = numpy.nonzero
+uproot_lang.functions["count_nonzero"] = awkward.count_nonzero
 
 
 d_datetime_fmt = {}
