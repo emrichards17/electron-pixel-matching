@@ -5,10 +5,11 @@
 .#*
 .*.swp
 
-# We probaly do not want to push plots
+# We probaly do not want to push plots and documents
 *plots*
 *.pdf
 *.png
+*documents*
 
 # Just some stuff one might have for local tests
 *.bak
