@@ -62,7 +62,8 @@ uproot_lang.functions["min"] = numpy.minimum
 uproot_lang.functions["max"] = numpy.maximum
 uproot_lang.functions["where"] = numpy.where
 uproot_lang.functions["nonzero"] = numpy.nonzero
-uproot_lang.functions["count_nonzero"] = awkward.count_nonzero
+uproot_lang.functions["ak_where"] = awkward.where
+uproot_lang.functions["ak_count_nonzero"] = awkward.count_nonzero
 
 
 d_datetime_fmt = {}
