@@ -1,4 +1,6 @@
-import awkward
+import awkward as awk
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import uproot
 
 
@@ -57,42 +59,88 @@ def main() :
         language = utils.uproot_lang,
         num_workers = 10,
         #max_num_elements = 10,
-        step_size = 100,
+        step_size = 5,
     ) :
         
         #print(tree_branches["hgcalEle_count"])
         print(type(tree_branches))
         
-        hgcalEle_SC_hits = awkward.zip({
-            "energy": tree_branches["vv_hgcalEle_SC_hit_energyTrue"],
-            "rho": tree_branches["vv_hgcalEle_SC_hit_rho"],
-            "x": tree_branches["vv_hgcalEle_SC_hit_x"],
-            "y": tree_branches["vv_hgcalEle_SC_hit_y"],
-            "z": tree_branches["vv_hgcalEle_SC_hit_z"],
-            "eta": tree_branches["vv_hgcalEle_SC_hit_eta"],
-            "phi": tree_branches["vv_hgcalEle_SC_hit_phi"],
-            "detector": tree_branches["vv_hgcalEle_SC_hit_detector"],
-            "layer": tree_branches["vv_hgcalEle_SC_hit_layer"],
-        })
+        hgcalEle_SC_hits = awk.zip(
+            arrays = {
+                "energy": tree_branches["vv_hgcalEle_SC_hit_energyTrue"],
+                "rho": tree_branches["vv_hgcalEle_SC_hit_rho"],
+                "x": tree_branches["vv_hgcalEle_SC_hit_x"],
+                "y": tree_branches["vv_hgcalEle_SC_hit_y"],
+                "z": tree_branches["vv_hgcalEle_SC_hit_z"],
+                "eta": tree_branches["vv_hgcalEle_SC_hit_eta"],
+                "phi": tree_branches["vv_hgcalEle_SC_hit_phi"],
+                "detector": tree_branches["vv_hgcalEle_SC_hit_detector"],
+                "layer": tree_branches["vv_hgcalEle_SC_hit_layer"],
+            },
+        )
         
-        hgcalEles = awkward.zip({
-            "charge": tree_branches["v_hgcalEle_charge"],
-            "pt": tree_branches["v_hgcalEle_pt"],
-            "eta": tree_branches["v_hgcalEle_eta"],
-            "phi": tree_branches["v_hgcalEle_phi"],
-            "energy": tree_branches["v_hgcalEle_energy"],
-            "SC_hit_count": tree_branches["v_hgcalEle_SC_hit_count"],
-            "SC_hits": hgcalEle_SC_hits,
-        })
+        hgcalEles = awk.zip(
+            arrays = {
+                "charge": tree_branches["v_hgcalEle_charge"],
+                "pt": tree_branches["v_hgcalEle_pt"],
+                "eta": tree_branches["v_hgcalEle_eta"],
+                "phi": tree_branches["v_hgcalEle_phi"],
+                "energy": tree_branches["v_hgcalEle_energy"],
+                "SC_hit_count": tree_branches["v_hgcalEle_SC_hit_count"],
+                "SC_hits": hgcalEle_SC_hits,
+            },
+            depth_limit = 1, # Do not broadcast
+        )
         
-        pixelRecHits = awkward.zip({
-            "rho": tree_branches["v_pixelRecHit_globalPos_rho"],
-            "x": tree_branches["v_pixelRecHit_globalPos_x"],
-            "y": tree_branches["v_pixelRecHit_globalPos_y"],
-            "z": tree_branches["v_pixelRecHit_globalPos_z"],
-        })
+        pixelRecHits = awk.zip(
+            arrays = {
+                # Convert mm to cm
+                "rho": 0.1*tree_branches["v_pixelRecHit_globalPos_rho"],
+                "x": 0.1*tree_branches["v_pixelRecHit_globalPos_x"],
+                "y": 0.1*tree_branches["v_pixelRecHit_globalPos_y"],
+                "z": 0.1*tree_branches["v_pixelRecHit_globalPos_z"],
+            },
+        )
         
         print("")
+        
+        # Loop over events, electrons
+        # This is slow -- just to mess aroudn with
+        # Will use awkward slicing operations later
+        
+        assert(len(hgcalEles) == len(pixelRecHits))
+        nEvent = len(hgcalEles)
+        
+        for iEvent in range(nEvent) :
+            
+            eles = hgcalEles[iEvent]
+            pixHits = pixelRecHits[iEvent]
+            nEle = len(eles.pt)
+            
+            for iEle in range(nEle) :
+                
+                print(iEle)
+                plt.clf()
+                plt.scatter(
+                    x = eles.SC_hits[iEle].z,
+                    y = eles.SC_hits[iEle].rho,
+                    c = eles.SC_hits[iEle].energy,
+                    norm = mpl.colors.LogNorm(),
+                )
+                plt.colorbar(label = "HGCal hit energy [GeV]", location = "right", orientation="vertical")
+                
+                # Get the indices of the pixel hits on the same half of the detector as the electron
+                # That is, hit.z and ele.eta should have the same sign
+                pixHits_idx = (pixHits.z * eles.eta[iEle]) > 0
+                plt.scatter(
+                    x = pixHits.z[pixHits_idx],
+                    y = pixHits.rho[pixHits_idx],
+                    c = "r"
+                )
+                
+                plt.show(block = False)
+                plt.tight_layout()
+                print("Plotted")
     
     return 0
 
