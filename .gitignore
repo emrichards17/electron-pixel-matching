@@ -4,6 +4,8 @@
 *~
 .#*
 .*.swp
+*.DS_Store*
+*.ipynb*
 
 # We probaly do not want to push plots and documents
 *plots*
