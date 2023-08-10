@@ -177,6 +177,26 @@ def main() :
     stop_processing = False
     make_plots = False
     show_plots = False
+
+    fig_scatter_rhoz = None
+    
+    if (make_plots) :
+        
+        fig_scatter_rhoz = plt.figure(figsize = [12, 8])
+        colormap = mpl.cm.get_cmap("nipy_spectral").copy()
+    
+    
+    
+    #runNumber = 1
+    #lumiNumber = 54
+    #eventNumber = 53041
+    #
+    #if (runNumber > 0 and lumiNumber > 0 and eventNumber > 0) :
+    #    
+    #    eventId_cut = f"& ((runNumber == {runNumber}) & (lumiNumber == {lumiNumber}) & (eventNumber == {eventNumber}))"
+    
+    
+    
     
     for tree_branches in uproot.iterate(
         files = l_filename,
