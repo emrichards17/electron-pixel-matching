@@ -173,7 +173,7 @@ def main() :
     # colormap = mpl.cm.get_cmap("nipy_spectral").copy()
     
     nEvent_total = 0
-    nEvent_max = 10
+    nEvent_max = -1
     stop_processing = False
     make_plots = False
     show_plots = False
