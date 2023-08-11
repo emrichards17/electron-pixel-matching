@@ -169,21 +169,21 @@ def main() :
     
     print("")
     
-    fig_scatter_rhoz = plt.figure(figsize = [10, 8])
-    colormap = mpl.cm.get_cmap("nipy_spectral").copy()
+    # fig_scatter_rhoz = plt.figure(figsize = [10, 8])
+    # colormap = mpl.cm.get_cmap("nipy_spectral").copy()
     
     nEvent_total = 0
-    nEvent_max = -1
+    nEvent_max = 10
     stop_processing = False
     make_plots = False
     show_plots = False
 
-    fig_scatter_rhoz = None
+    # fig_scatter_rhoz = None
     
-    if (make_plots) :
+    # if (make_plots) :
         
-        fig_scatter_rhoz = plt.figure(figsize = [12, 8])
-        colormap = mpl.cm.get_cmap("nipy_spectral").copy()
+    #     fig_scatter_rhoz = plt.figure(figsize = [12, 8])
+    #     colormap = mpl.cm.get_cmap("nipy_spectral").copy()
     
     
     
@@ -268,7 +268,7 @@ def main() :
         language = utils.uproot_lang,
         num_workers = 10,
         #max_num_elements = 1,
-        step_size = 10000,
+        step_size = 10,
     ) :
         
         #print(tree_branches["hgcalEle_count"])
@@ -398,53 +398,55 @@ def main() :
                 )
                 
                 print(tag)
+
                 
-                fig_scatter_rhoz.clf()
-                ax_scatter_rhoz = fig_scatter_rhoz.add_subplot(1, 1, 1)
+                
+                # fig_scatter_rhoz.clf()
+                # ax_scatter_rhoz = fig_scatter_rhoz.add_subplot(1, 1, 1)
                 #ax_scatter_rhoz_zoom = fig_scatter_rhoz.add_subplot(2, 1, 2)
                 
-                calo_img = ax_scatter_rhoz.scatter(
-                    x = eles.SC_hits[iEle].z,
-                    y = eles.SC_hits[iEle].rho,
-                    c = eles.SC_hits[iEle].energy,
-                    s = 20,
-                    norm = mpl.colors.LogNorm(),
-                    cmap = colormap,
-                )
+                # calo_img = ax_scatter_rhoz.scatter(
+                #     x = eles.SC_hits[iEle].z,
+                #     y = eles.SC_hits[iEle].rho,
+                #     c = eles.SC_hits[iEle].energy,
+                #     s = 20,
+                #     norm = mpl.colors.LogNorm(),
+                #     cmap = colormap,
+                # )
                 
-                ax_scatter_rhoz.grid(visible = True, which = "major", axis = "both", linestyle = "--")
+                # ax_scatter_rhoz.grid(visible = True, which = "major", axis = "both", linestyle = "--")
                 
-                fig_scatter_rhoz.colorbar(
-                    mappable = calo_img,
-                    ax = ax_scatter_rhoz,
-                    label = "HGCal hit energy [GeV]",
-                    location = "right",
-                    orientation="vertical",
-                )
+                # fig_scatter_rhoz.colorbar(
+                #     mappable = calo_img,
+                #     ax = ax_scatter_rhoz,
+                #     label = "HGCal hit energy [GeV]",
+                #     location = "right",
+                #     orientation="vertical",
+                # )
                 
-                # Get the indices of the pixel hits on the same half of the detector as the electron
-                # That is, hit.z and ele.eta should have the same sign
-                #pixHits = pixelRecHits[iEvent]
-                #pixHits_idx = (pixHits.z * eles.eta[iEle]) > 0
-                #pixHits = pixHits[pixHits_idx]
-                #
-                #ax_scatter_rhoz.scatter(
-                #    x = pixHits.z,
-                #    y = pixHits.rho,
-                #    #c = "r",
-                #    edgecolors = "r",
-                #    facecolors = "none",
-                #)
+                # # Get the indices of the pixel hits on the same half of the detector as the electron
+                # # That is, hit.z and ele.eta should have the same sign
+                # #pixHits = pixelRecHits[iEvent]
+                # #pixHits_idx = (pixHits.z * eles.eta[iEle]) > 0
+                # #pixHits = pixHits[pixHits_idx]
+                # #
+                # #ax_scatter_rhoz.scatter(
+                # #    x = pixHits.z,
+                # #    y = pixHits.rho,
+                # #    #c = "r",
+                # #    edgecolors = "r",
+                # #    facecolors = "none",
+                # #)
                 
-                ax_scatter_rhoz.scatter(
-                    x = eles.gsfTrack_hits[iEle].z,
-                    y = eles.gsfTrack_hits[iEle].rho,
-                    #c = "r",
-                    marker = "s",
-                    edgecolors = "b",
-                    facecolors = "none",
-                    label = "GSF track pixel hits"
-                )
+                # ax_scatter_rhoz.scatter(
+                #     x = eles.gsfTrack_hits[iEle].z,
+                #     y = eles.gsfTrack_hits[iEle].rho,
+                #     #c = "r",
+                #     marker = "s",
+                #     edgecolors = "b",
+                #     facecolors = "none",
+                #     label = "GSF track pixel hits"
+                # )
                 
                 det_half = 1
                 plot_xrange = numpy.array([-20, 400])
@@ -460,12 +462,12 @@ def main() :
                 fit_res = numpy.polyfit(x = eles.SC_hits[iEle].z, y = eles.SC_hits[iEle].rho, w = eles.SC_hits[iEle].energy, deg = 1)
                 fit_yval = numpy.polyval(p = fit_res, x = plot_xrange)
                 
-                ax_scatter_rhoz.plot(
-                    plot_xrange,
-                    fit_yval,
-                    "k--",
-                    label = r"$E$ weighted linear fit"
-                )
+                # ax_scatter_rhoz.plot(
+                #     plot_xrange,
+                #     fit_yval,
+                #     "k--",
+                #     label = r"$E$ weighted linear fit"
+                # )
                 
                 # PCA
                 pca_result = pca_2d(
@@ -473,13 +475,13 @@ def main() :
                     y = eles.SC_hits[iEle].rho,
                 )
                 
-                axis1_y = numpy.polyval(pca_result["eigaxes"][0], plot_xrange)
-                ax_scatter_rhoz.plot(
-                    plot_xrange,
-                    axis1_y,
-                    "b--",
-                    label = r"PCA major axis"
-                )
+                # axis1_y = numpy.polyval(pca_result["eigaxes"][0], plot_xrange)
+                # ax_scatter_rhoz.plot(
+                #     plot_xrange,
+                #     axis1_y,
+                #     "b--",
+                #     label = r"PCA major axis"
+                # )
                 
                 # Weighted PCA
                 wpca_result = pca_2d(
@@ -489,13 +491,13 @@ def main() :
                 )
                
                 
-                axis1_y_w = numpy.polyval(wpca_result["eigaxes"][0], plot_xrange)
-                ax_scatter_rhoz.plot(
-                    plot_xrange,
-                    axis1_y_w,
-                    "r--",
-                    label = r"$E$ weighted PCA major axis"
-                )
+                # axis1_y_w = numpy.polyval(wpca_result["eigaxes"][0], plot_xrange)
+                # ax_scatter_rhoz.plot(
+                #     plot_xrange,
+                #     axis1_y_w,
+                #     "r--",
+                #     label = r"$E$ weighted PCA major axis"
+                # )
                 rad=[1.5, 1.75, 2, 2.5, 3]
                 for i in range(len(rad)):
                     cylinder_rad=rad[i]
@@ -508,12 +510,12 @@ def main() :
                     )
                     
                     axis1_y_cyl = numpy.polyval(wpca_result_inCylinder["eigaxes"][0], plot_xrange)
-                    ax_scatter_rhoz.plot(
-                        plot_xrange,
-                        axis1_y_cyl,
-                        "g--",
-                        label = rf"$E$ weighted PCA major axis (hits within {cylinder_rad} cm)"
-                    )
+                    # ax_scatter_rhoz.plot(
+                    #     plot_xrange,
+                    #     axis1_y_cyl,
+                    #     "g--",
+                    #     label = rf"$E$ weighted PCA major axis (hits within {cylinder_rad} cm)"
+                    # )
 
                     #calculate y values
                     axis1_yval= numpy.polyval(wpca_result_inCylinder["eigaxes"][0], eles.gsfTrack_hits[iEle].z)
@@ -561,67 +563,67 @@ def main() :
                 #    c = "r",
                 #)
                 
-                # Plot the gen electron vertex
-                ax_scatter_rhoz.scatter(
-                    x = eles.genEle[iEle].vtx_z,
-                    y = eles.genEle[iEle].vtx_rho,
-                    edgecolors = "b",
-                    facecolors = "none",
-                    #label = "Electron gen vertex",
-                )
+                # # Plot the gen electron vertex
+                # ax_scatter_rhoz.scatter(
+                #     x = eles.genEle[iEle].vtx_z,
+                #     y = eles.genEle[iEle].vtx_rho,
+                #     edgecolors = "b",
+                #     facecolors = "none",
+                #     #label = "Electron gen vertex",
+                # )
                 
-                # Plot the electron vertex
-                ax_scatter_rhoz.scatter(
-                    x = eles.vtx_z[iEle],
-                    y = eles.vtx_rho[iEle],
-                    edgecolors = "magenta",
-                    facecolors = "none",
-                    label = "Electron vertex",
-                )
+                # # Plot the electron vertex
+                # ax_scatter_rhoz.scatter(
+                #     x = eles.vtx_z[iEle],
+                #     y = eles.vtx_rho[iEle],
+                #     edgecolors = "magenta",
+                #     facecolors = "none",
+                #     label = "Electron vertex",
+                # )
                 
-                #print(
-                #    f"({eles.genEle[iEle].charge}, {eles.charge[iEle]}), "
-                #    f"({eles.genEle[iEle].eta}, {eles.eta[iEle]}), "
-                #    f"({eles.genEle[iEle].vtx_rho}, {eles.genEle[iEle].vtx_z})"
-                #)
+                # #print(
+                # #    f"({eles.genEle[iEle].charge}, {eles.charge[iEle]}), "
+                # #    f"({eles.genEle[iEle].eta}, {eles.eta[iEle]}), "
+                # #    f"({eles.genEle[iEle].vtx_rho}, {eles.genEle[iEle].vtx_z})"
+                # #)
                 
-                # Plot HGCal boundary eta lines
-                ax_scatter_rhoz.plot(
-                    eta_xrange,
-                    numpy.polyval([numpy.tan(pseudorapidity_to_polar(det_half*1.479)), 0], eta_xrange),
-                    "k:",
-                )
+                # # Plot HGCal boundary eta lines
+                # ax_scatter_rhoz.plot(
+                #     eta_xrange,
+                #     numpy.polyval([numpy.tan(pseudorapidity_to_polar(det_half*1.479)), 0], eta_xrange),
+                #     "k:",
+                # )
                 
-                ax_scatter_rhoz.plot(
-                    eta_xrange,
-                    numpy.polyval([numpy.tan(pseudorapidity_to_polar(det_half*3.1)), 0], eta_xrange),
-                    "k:",
-                )
+                # ax_scatter_rhoz.plot(
+                #     eta_xrange,
+                #     numpy.polyval([numpy.tan(pseudorapidity_to_polar(det_half*3.1)), 0], eta_xrange),
+                #     "k:",
+                # )
                 
-                ax_scatter_rhoz.set_xlabel("$z$ [cm]", weight='bold')
-                ax_scatter_rhoz.set_ylabel(r"$\rho$ [cm]")
+                # ax_scatter_rhoz.set_xlabel("$z$ [cm]", weight='bold')
+                # ax_scatter_rhoz.set_ylabel(r"$\rho$ [cm]")
                 
-                ax_scatter_rhoz.set_xlim(plot_xrange)
-                ax_scatter_rhoz.set_ylim(plot_yrange)
+                # ax_scatter_rhoz.set_xlim(plot_xrange)
+                # ax_scatter_rhoz.set_ylim(plot_yrange)
                 
-                ax_scatter_rhoz.legend(
-                    loc = "upper left" if (det_half > 0) else "upper right"
-                    #fontsize = 15,
-                )
+                # ax_scatter_rhoz.legend(
+                #     loc = "upper left" if (det_half > 0) else "upper right"
+                #     #fontsize = 15,
+                # )
                 
                 #ax_scatter_rhoz.set_aspect("equal")
                 
-                fig_scatter_rhoz.suptitle(
-                    f"Run: {runNumber}; Lumi: {lumiNumber}; Event: {eventNumber}; Electron {iEle}\n"
-                    rf"$E^\mathrm{{gen}}=${eles.genEle[iEle].energy:0.2f} GeV, $p^\mathrm{{gen}}_T=${eles.genEle[iEle].pt:0.2f} GeV, $\eta^\mathrm{{gen}}=${eles.genEle[iEle].eta:0.2f}"
-                )
+                # fig_scatter_rhoz.suptitle(
+                #     f"Run: {runNumber}; Lumi: {lumiNumber}; Event: {eventNumber}; Electron {iEle}\n"
+                #     rf"$E^\mathrm{{gen}}=${eles.genEle[iEle].energy:0.2f} GeV, $p^\mathrm{{gen}}_T=${eles.genEle[iEle].pt:0.2f} GeV, $\eta^\mathrm{{gen}}=${eles.genEle[iEle].eta:0.2f}"
+                # )
                 
-                fig_scatter_rhoz.tight_layout()#pad = 0)
+                # fig_scatter_rhoz.tight_layout()#pad = 0)
                 
-                if (show_plots) :
-                    fig_scatter_rhoz.canvas.draw()
-                    fig_scatter_rhoz.show()#block = False)
-                    fig_scatter_rhoz.canvas.flush_events()
+                # if (show_plots) :
+                #     fig_scatter_rhoz.canvas.draw()
+                #     fig_scatter_rhoz.show()#block = False)
+                #     fig_scatter_rhoz.canvas.flush_events()
                 
                 
                 d_outBranch["runNumber"].append(runNumber)
